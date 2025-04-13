@@ -15,5 +15,11 @@ export default defineConfig({
   server: {
     port: 4000,
     open: true,
-  }
+    host: 'parallelmuhit.uz',
+  },
+  preview: {
+    port: 4000,
+    open: true,
+    host: 'parallelmuhit.uz',
+  },
 });
