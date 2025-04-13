@@ -1,0 +1,164 @@
+
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+
+.admin-login {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.admin-login h1 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.admin-login .form-group {
+  margin-bottom: 20px;
+}
+
+.admin-login label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.admin-login input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.admin-login .help-text {
+  font-size: 12px;
+  color: #777;
+  margin-top: 5px;
+}
+
+.admin-login .error-message {
+  color: var(--danger-color);
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: rgba(231, 76, 60, 0.1);
+  border-radius: 4px;
+}
+
+.admin-login .login-button {
+  width: 100%;
+}
+
+.admin-dashboard h1 {
+  margin-bottom: 20px;
+}
+
+.admin-dashboard .dashboard-actions {
+  margin-bottom: 30px;
+}
+
+.admin-dashboard .posts-table-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.admin-dashboard h2 {
+  margin-bottom: 20px;
+}
+
+.admin-dashboard .posts-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-dashboard .posts-table th,
+.admin-dashboard .posts-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.admin-dashboard .posts-table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.admin-dashboard .posts-table .actions {
+  white-space: nowrap;
+}
+
+.post-form {
+  background-color: white;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+  height: 100%;
+  margin: 0;
+}
+
+.post-form h1 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 32px;
+}
+
+.post-form .form-group {
+  margin-bottom: 20px;
+}
+
+.post-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.post-form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333; 
+}
+
+.post-form input:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.post-form .error-message {
+  color: #e74c3c;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.rich-text-editor {
+  margin-top: 5px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
