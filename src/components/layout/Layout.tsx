@@ -4,7 +4,7 @@ import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 
 export default function Layout() { 
   return (
-    <SidebarProvider className="bg-background text-foreground">
+    <SidebarProvider className="text-foreground">
       <AppSidebar />
       <SidebarTrigger />
       <main className="flex-1">

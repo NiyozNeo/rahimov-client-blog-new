@@ -8,6 +8,8 @@ const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
+    token: localStorage.getItem("auth_token") || "",
+    Accept: "application/json",
   },
 });
 
@@ -33,18 +35,43 @@ export const AuthApi = {
     }
   },
 
-  checkChannelAccess: async () => {
+  checkChannelAccess: async (): Promise<boolean> => {
     try {
-      const response = await api.get("/telegram/check-channel-access");
-      return response.data.hasAccess;
+      const response = await api.get("/telegram/check-channel-access", {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          token: localStorage.getItem("auth_token") || "",
+        },
+      });
+      console.log("Channel access response:", response.data);
+      
+
+      if (response.data && typeof response.data.hasAccess === 'boolean') {
+        return response.data.hasAccess;
+      } else {
+        throw new Error("Invalid response format");
+      }
     } catch (error) {
       console.error("Channel access check error:", error);
+      
+      // If it's an authorization error, return false
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        return false;
+      }
+      
+      // For network errors, throw to let the caller handle it
+      if (axios.isAxiosError(error) && !error.response) {
+        throw new Error("Network error when checking channel access");
+      }
+      
+      // For any other error, return false
       return false;
     }
   },
 
   logout: async () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("auth_token");
     localStorage.removeItem("user");
   },
 };
@@ -86,7 +113,13 @@ export const BlogApi = {
     authorName: string;
   }) => {
     try {
-      const response = await api.post("/blog", blogData);
+      const response = await api.post("/blog", blogData, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          token: localStorage.getItem("auth_token") || "",
+        },
+      });
       return response.data;
     } catch (error) {
       console.error("Error creating blog:", error);

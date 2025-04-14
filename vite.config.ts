@@ -15,11 +15,12 @@ export default defineConfig({
   server: {
     port: 4000,
     open: true,
-    host: 'parallelmuhit.uz',
+    host: 'termite-helpful-arguably.ngrok-free.app',
+    allowedHosts: ['termite-helpful-arguably.ngrok-free.app'],
   },
-  preview: {
-    port: 4000,
-    open: true,
-    host: 'parallelmuhit.uz',
-  },
+  // preview: {
+  //   port: 4000,
+  //   open: true,
+  //   host: 'parallelmuhit.uz',
+  // },
 });

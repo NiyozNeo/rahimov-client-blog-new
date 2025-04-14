@@ -101,7 +101,7 @@ const Login: React.FC<LoginProps> = ({ returnUrl }) => {
               
               <div className="text-center">
                 <TelegramLogin 
-                  botName="asdaerwafasetgybot"
+                  botName="neotestalfabot"
                   buttonSize="large"
                   cornerRadius={8}
                   usePic={true}
