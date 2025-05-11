@@ -1,4 +1,4 @@
-import ResizeImageExtension from 'tiptap-extension-resize-image';
+// import ResizeImageExtension from 'tiptap-extension-resize-image';
 
-// Simply export the package's extension without any custom modifications
-export default ResizeImageExtension;
+// // Simply export the package's extension without any custom modifications
+// export default ResizeImageExtension;
