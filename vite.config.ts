@@ -11,6 +11,9 @@ export default defineConfig({
       '@': path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src"),
     },
   },
+  build: {
+    minify: false,
+  },
   server: {
     port: 4000,
     open: true,
