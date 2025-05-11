@@ -7,7 +7,7 @@ import React, {
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
-// import ResizeImageExtension from "./ResizableImageExtension";
+import ResizeImageExtension from "./ResizableImageExtension";
 import AlignmentExtension from "./AlignmentExtension";
 import "./RichTextEditor.css";
 
@@ -93,7 +93,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           }
         },
       }),
-      // ResizeImageExtension,
+      ResizeImageExtension,
       AlignmentExtension,
     ],
     content: content || "",
@@ -171,7 +171,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           editor
             .chain()
             .focus()
-            // .setImage({ src: fullImageUrl })
+            .setImage({ src: fullImageUrl })
             .createParagraphNear()
             .run();
         }
