@@ -2,7 +2,7 @@
 interface Post {
   id: number;
   title: string;
-  content: string;
+  content?: string; // Make content optional
   author: string;
   date: string;
   slug: string;

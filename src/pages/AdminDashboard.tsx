@@ -8,7 +8,7 @@ interface Blog {
   id: string;
   title: string;
   createdAt: string;
-  content: string;
+  content?: string; // Make content optional
   slug: string;
 }
 

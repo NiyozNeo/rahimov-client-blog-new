@@ -6,8 +6,8 @@ import { Button } from '../components/ui/button';
 interface Blog {
   id: string;
   title: string;
-  content: string;
-  authorName: string;
+  content?: string; // Make content optional
+  authorName?: string;
   createdAt?: string;
   date?: string;
   slug: string;
@@ -61,7 +61,7 @@ const HomePage: React.FC = () => {
               <div 
                 className="prose dark:prose-invert max-w-none mb-6"
                 dangerouslySetInnerHTML={{ 
-                  __html: blog.content.split('</h1>')[1]?.split('<h2>')[0] || blog.content
+                  __html: blog.content?.split('</h1>')[1]?.split('<h2>')[0] || blog.content || ''
                 }}
               />
               <div className="flex justify-between items-center mt-8">
@@ -103,7 +103,7 @@ const HomePage: React.FC = () => {
                 {formatDate(blog)}
               </p>
               <p className="text-sm mb-4 flex-1 text-muted-foreground">
-                {getContentPreview(blog.content)}
+                {getContentPreview(blog.content || '')}
               </p>
               <Button 
                 variant="default" 
