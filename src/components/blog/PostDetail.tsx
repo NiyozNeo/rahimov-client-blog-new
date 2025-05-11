@@ -124,7 +124,7 @@ const PostDetail: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <button
+            <Button
               className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-xl font-semibold px-8 py-3 rounded-xl shadow-md transition-colors"
               style={{ minWidth: 220 }}
             >
@@ -140,7 +140,7 @@ const PostDetail: React.FC = () => {
                 <path fill="currentColor" d="M12 17a1 1 0 100-2 1 1 0 000 2zm0-4a1 1 0 100-2 1 1 0 000 2z" />
               </svg>
               Botga o'tish
-            </button>
+            </Button>
           </a>
         </div>
       </div>
