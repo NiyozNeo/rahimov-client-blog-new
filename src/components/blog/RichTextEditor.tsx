@@ -93,7 +93,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           }
         },
       }),
-      ResizeImageExtension,
+      // ResizeImageExtension,
       AlignmentExtension,
     ],
     content: content || "",
