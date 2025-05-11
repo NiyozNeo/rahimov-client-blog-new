@@ -22,5 +22,6 @@ export default defineConfig({
     port: 4000,
     open: true,
     host: 'parallelmuhit.uz',
+    allowedHosts: ['parallelmuhit.uz'],
   },
 });
