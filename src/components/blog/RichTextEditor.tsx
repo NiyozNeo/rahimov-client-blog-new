@@ -12,12 +12,12 @@ import AlignmentExtension from "./AlignmentExtension";
 import "./RichTextEditor.css";
 
 interface RichTextEditorProps {
-  content: string;
+  content?: string; // Make content optional
   onChange: (content: string) => void;
 }
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({
-  content,
+  content = "", // Default to empty string if undefined
   onChange,
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
