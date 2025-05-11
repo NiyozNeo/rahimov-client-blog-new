@@ -22,7 +22,7 @@ interface User {
 interface Blog {
   id: string;
   title: string;
-  content: any;
+  content?: any; // Make content optional
   authorId: number;
   authorName: string;
   createdAt: string;

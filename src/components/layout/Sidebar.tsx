@@ -18,6 +18,7 @@ type Blog = {
   title: string;
   createdAt: string;
   slug: string;
+  content?: string; // Make content optional
 };
 
 export function AppSidebar() {

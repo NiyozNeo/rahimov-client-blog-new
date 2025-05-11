@@ -29,6 +29,13 @@ interface PostParams {
   [key: string]: string;
 }
 
+// If Blog or Post interfaces are defined here, ensure content is optional
+// interface Blog {
+//   ...
+//   content?: string;
+//   ...
+// }
+
 const PostForm: React.FC<PostFormProps> = ({ mode = 'create' }) => {
   const { id } = useParams<PostParams>();
   const navigate = useNavigate();
