@@ -1,16 +1,18 @@
 .rich-text-editor {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: 4px;
   overflow: hidden;
+  position: relative; /* Added to establish a positioning context */
 }
 
 .editor-toolbar {
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
-  background-color: #2c3e50;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border);
   gap: 8px;
+  background-color: var(--background); /* Added to ensure it has a background */
+  z-index: 10; /* Added to keep toolbar on top of content */
 }
 
 .editor-toolbar button {
@@ -18,15 +20,13 @@
   min-width: 36px;
   height: 36px;
   padding: 0 10px;
-  background-color: white;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
   font-weight: bold;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
@@ -37,9 +37,9 @@
 }
 
 .editor-toolbar button.is-active {
-  background-color: #3498db;
+  background-color: var(--primary);
   color: white;
-  border-color: #2980b9;
+  border-color: var(--border);
 }
 
 /* Alignment buttons */
@@ -59,22 +59,55 @@
 .separator {
   width: 1px;
   height: 24px;
-  background-color: #ccc;
+  background-color: var(--background);
   margin: 0 5px;
   align-self: center;
 }
 
 .editor-content {
   padding: 16px;
-  min-height: 300px;
-  background-color: white;
-  color: #333;
+  min-height: 500px; /* Increased from 300px to 500px */
   text-align: left; /* Default text alignment is left */
+}
+
+/* List styles */
+.editor-content ul {
+  list-style-type: disc !important;
+  margin-left: 1.5em !important;
+  padding-left: 0.5em !important;
+}
+
+.editor-content ol {
+  list-style-type: decimal !important;
+  margin-left: 1.5em !important;
+  padding-left: 0.5em !important;
+}
+
+.editor-content li p {
+  margin: 0;
+}
+
+/* Added for sticky toolbar functionality */
+.editor-toolbar.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  border-top: none;
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Add padding to account for sticky toolbar when active */
+.editor-content.has-sticky-toolbar {
+  padding-top: 70px; /* Adjust based on toolbar height */
 }
 
 /* ProseMirror content styling */
 .ProseMirror {
-  min-height: 300px;
+  min-height: 500px; /* Increased from 300px to 500px */
   outline: none;
   text-align: left; /* Default text alignment is left */
 }
@@ -117,16 +150,29 @@
   margin-bottom: 1em;
 }
 
+.ProseMirror ul li,
+.ProseMirror ol li {
+  margin-bottom: 0.5em;
+  position: relative;
+}
+
+.ProseMirror ul li::marker,
+.ProseMirror ol li::marker {
+  color: var(--primary);
+}
+
 .ProseMirror blockquote {
-  border-left: 3px solid #ccc;
-  padding-left: 1em;
-  margin-left: 0;
-  margin-right: 0;
+  border-left: 3px solid var(--primary);
+  padding: 0.5em 1em;
+  margin: 1em 0;
+  background-color: var(--accent);
+  border-radius: 0 4px 4px 0;
   font-style: italic;
+  color: var(--muted-foreground);
 }
 
 .ProseMirror pre {
-  background-color: #f5f5f5;
+  background-color: var(--accent);
   padding: 0.75em;
   border-radius: 4px;
   font-family: 'Courier New', Courier, monospace;
@@ -134,10 +180,54 @@
   overflow-x: auto;
 }
 
+/* Style for links in the editor */
+.ProseMirror a,
+.ProseMirror .editor-link,
+.prose a,
+.prose .editor-link {
+  color: #3498db !important; /* Link color */
+  text-decoration: underline !important;
+  cursor: pointer !important;
+  transition: color 0.2s ease !important;
+  font-weight: 500 !important;
+  display: inline-block !important;
+}
+
+.ProseMirror a:hover,
+.ProseMirror .editor-link:hover,
+.prose a:hover,
+.prose .editor-link:hover {
+  color: #2980b9 !important; /* Darker shade for hover */
+  text-decoration: underline !important;
+}
+
+/* Add a special visual indicator in the editor to make links more visible */
+.ProseMirror .editor-link::after,
+.ProseMirror a::after {
+  content: "🔗";
+  font-size: 0.8em;
+  margin-left: 4px;
+  vertical-align: super;
+  opacity: 0.6;
+}
+
 .ProseMirror img {
   max-width: 100%;
   height: auto;
   margin: 1em 0;
+  display: block;
+  position: relative;
+}
+
+/* Resize handles for tiptap-extension-resize-image */
+.ProseMirror img.resize-cursor {
+  cursor: nwse-resize;
+  position: relative;
+}
+
+.ProseMirror img.resize-active {
+  z-index: 10;
+  outline: 2px solid var(--primary, #3498db);
 }
 
 /* Image upload styles */
@@ -172,4 +262,86 @@
   background-color: #2ecc71 !important;
   color: white !important;
   font-weight: bold !important;
+}
+
+/* Resizable image styles */
+.resizable-image-wrapper {
+  display: inline-block;
+  position: relative;
+  max-width: 100%;
+  margin: 1em 0;
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.image-container img {
+  display: block;
+  max-width: 100%;
+}
+
+.resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary, #3498db);
+  cursor: nwse-resize;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 2px;
+  z-index: 2;
+}
+
+.image-container.resizing {
+  user-select: none;
+}
+
+.image-container.resizing img {
+  pointer-events: none;
+}
+
+/* Image toolbar */
+.image-toolbar {
+  display: flex;
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  border-radius: 4px;
+  padding: 5px;
+  gap: 5px;
+  z-index: 20;
+}
+
+.image-toolbar button {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+}
+
+.image-toolbar button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.image-toolbar button.active {
+  background-color: var(--primary);
+}
+
+/* Clear floats after images */
+.ProseMirror .ProseMirror-selectednode + * {
+  clear: both;
 }

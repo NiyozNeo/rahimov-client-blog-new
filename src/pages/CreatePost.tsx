@@ -5,9 +5,12 @@ import { useBlogContext } from '../context/BlogContext';
 
 const CreatePost: React.FC = () => {
   const { isAdmin } = useBlogContext();
+console.log(isAdmin);
 
   // Redirect if not admin
   if (!isAdmin) {
+    console.log("Not an admin, redirecting to /admin");
+    
     return <Navigate to="/admin" replace />;
   }
 

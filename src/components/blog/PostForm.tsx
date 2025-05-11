@@ -3,11 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useBlogContext } from '../../context/BlogContext';
 import { Button } from '../ui/button';
 import RichTextEditor from './RichTextEditor';
+import api, { BlogApi } from '../../services/api';
 
 interface FormData {
   title: string;
   content: string;
-  summary: string;
+  slug: string;
   authorName: string;
   [key: string]: string;
 }
@@ -15,7 +16,7 @@ interface FormData {
 interface FormErrors {
   title?: string;
   content?: string;
-  summary?: string;
+  slug?: string;
   [key: string]: string | undefined;
 }
 
@@ -36,7 +37,7 @@ const PostForm: React.FC<PostFormProps> = ({ mode = 'create' }) => {
   const [formData, setFormData] = useState<FormData>({
     title: '',
     content: '',
-    summary: '',
+    slug: '',
     authorName: user?.first_name || 'Anonymous'
   });
   
@@ -49,8 +50,7 @@ const PostForm: React.FC<PostFormProps> = ({ mode = 'create' }) => {
         setFormData({
           title: post.title,
           content: post.content,
-          // Use empty string for summary if it doesn't exist on the post
-          summary: post.content.substring(0, 100) + '...',
+          slug: post.slug || '',
           authorName: post.authorName
         });
       }
@@ -59,10 +59,21 @@ const PostForm: React.FC<PostFormProps> = ({ mode = 'create' }) => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    // If changing the title and slug is empty, generate a slug
+    if (name === 'title' && !formData.slug) {
+      setFormData({
+        ...formData,
+        [name]: value,
+        slug: value.toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)+/g, '')
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
   const handleEditorChange = (content: string): void => {
@@ -80,32 +91,34 @@ const PostForm: React.FC<PostFormProps> = ({ mode = 'create' }) => {
     if (!formData.content.trim()) {
       newErrors.content = 'Content is required';
     }
-    if (!formData.summary.trim()) {
-      newErrors.summary = 'Summary is required';
+    if (!formData.slug.trim()) {
+      newErrors.slug = 'Slug is required';
+    } else if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(formData.slug)) {
+      newErrors.slug = 'Slug can only contain lowercase letters, numbers, and hyphens';
     }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     
-    if (!validateForm()) return;
-    
-    if (mode === 'create') {
-      createPost({
+    if (!validateForm()) return;    if (mode === 'create') {
+      await createPost({
         title: formData.title,
         content: formData.content,
-        authorName: formData.authorName
+        authorName: formData.authorName,
+        slug: formData.slug
       });
-      navigate('/');
+      navigate(`/post/${formData.slug}`);
     } else if (mode === 'edit' && id) {
-      updatePost(id, {
+      const updatedPost = await updatePost(id, {
         title: formData.title,
-        content: formData.content
+        content: formData.content,
+        slug: formData.slug
       });
-      navigate(`/post/${id}`);
+      navigate(`/post/${updatedPost.slug}`);
     }
   };
 
@@ -132,18 +145,19 @@ const PostForm: React.FC<PostFormProps> = ({ mode = 'create' }) => {
         </div>
         
         <div className="space-y-2">
-          <label htmlFor="summary" className="block font-medium">Summary</label>
+          <label htmlFor="slug" className="block font-medium">Slug</label>
           <input
             type="text"
-            id="summary"
-            name="summary"
-            value={formData.summary}
+            id="slug"
+            name="slug"
+            value={formData.slug}
             onChange={handleChange}
+            placeholder="my-post-url"
             className={`w-full px-3 py-2 rounded-md border ${
-              errors.summary ? 'border-destructive' : 'border-input'
+              errors.slug ? 'border-destructive' : 'border-input'
             } focus:outline-none focus:ring-2 focus:ring-primary`}
           />
-          {errors.summary && <p className="text-sm text-destructive">{errors.summary}</p>}
+          {errors.slug && <p className="text-sm text-destructive">{errors.slug}</p>}
         </div>
         
         <div className="space-y-2">

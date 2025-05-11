@@ -23,7 +23,7 @@ const AlignmentExtension = Extension.create({
   addGlobalAttributes() {
     return [
       {
-        types: ['paragraph', 'heading'],
+        types: ['paragraph', 'heading', 'blockquote', 'list', 'listItem'],
         attributes: {
           textAlign: {
             default: 'left',
@@ -33,11 +33,17 @@ const AlignmentExtension = Extension.create({
               }
 
               return {
+                class: `text-${attributes.textAlign}`,
                 style: `text-align: ${attributes.textAlign}`,
               };
             },
             parseHTML: (element: HTMLElement) => {
               const textAlign = element.style.textAlign;
+              
+              if (element.classList.contains('text-center')) return 'center';
+              if (element.classList.contains('text-right')) return 'right';
+              if (element.classList.contains('text-justify')) return 'justify';
+              
               if (!textAlign || textAlign === 'left') {
                 return 'left';
               }
@@ -52,12 +58,12 @@ const AlignmentExtension = Extension.create({
   addCommands() {
     return {
       setTextAlign: (alignment: string) => ({ commands }: { commands: any }) => {
-        return commands.forEach(['paragraph', 'heading'], (node: string) => {
+        return commands.forEach(['paragraph', 'heading', 'blockquote', 'list', 'listItem'], (node: string) => {
           return commands.updateAttributes(node, { textAlign: alignment });
         });
       },
       unsetTextAlign: () => ({ commands }: { commands: any }) => {
-        return commands.forEach(['paragraph', 'heading'], (node: string) => {
+        return commands.forEach(['paragraph', 'heading', 'blockquote', 'list', 'listItem'], (node: string) => {
           return commands.resetAttributes(node, 'textAlign');
         });
       },

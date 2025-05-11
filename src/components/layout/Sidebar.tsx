@@ -17,23 +17,22 @@ type Blog = {
   id: string;
   title: string;
   createdAt: string;
+  slug: string;
 };
 
 export function AppSidebar() {
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout, blogs, isAuthenticated } = useBlogContext();
+  const { logout, blogs, isAuthenticated, isAdmin } = useBlogContext();
 
   // Filter blogs based on search query
   const filteredBlogs = blogs.filter((blog) =>
     blog.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Handle blog item click - now just navigate to the post directly
-  const handleBlogClick = (blogId: string, event: React.MouseEvent) => {
+  );  // Handle blog item click - now navigate to the post using slug
+  const handleBlogClick = (blogSlug: string, event: React.MouseEvent) => {
     event.preventDefault();
-    navigate(`/post/${blogId}`);
+    navigate(`/post/${blogSlug}`);
   };
 
   // Handle logout
@@ -48,50 +47,49 @@ export function AppSidebar() {
       variant="sidebar"
       className="sidebar-background"
     >
-      <SidebarHeader>
-        <h1 className="text-xl font-bold ">Parallel Muhit</h1>
+      <SidebarHeader className="p-4">
+        <h1 className="text-xl font-bold mb-3">
+          <a href="/" className="hover:text-sidebar-primary transition-colors">Parallel Muhit</a>
+        </h1>
 
         <Input
           type="search"
           placeholder="Search posts..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          className="bg-sidebar-card rounded-md"
         />
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
           {/* Blog list */}
-          <div className="p-0 sidebar-border-light">
+          <div className="py-2">
             <div className="overflow-y-auto max-h-[calc(100vh-240px)]">
               {filteredBlogs.length > 0 ? (
                 <div>
-                  {filteredBlogs.map((blog: Blog) => {
-                    const isActive = location.pathname === `/post/${blog.id}`;
+                  {filteredBlogs.map((blog: Blog, index: number) => {                    const isActive = location.pathname === `/post/${blog.slug}`;
                     return (
                       <a
                         key={blog.id}
-                        href={`/post/${blog.id}`}
-                        onClick={(e) => handleBlogClick(blog.id, e)}
-                        className={`block px-5 py-3.5 border-l-2 ${
+                        href={`/post/${blog.slug}`}
+                        onClick={(e) => handleBlogClick(blog.slug, e)}
+                        className={`block px-4 py-2.5 transition-colors mx-2 rounded-md ${
                           isActive
-                            ? `sidebar-active-bg-light sidebar-active-text-light sidebar-active-border`
-                            : `border-transparent sidebar-hover-bg-light`
+                            ? `bg-[#212121] text-sidebar-primary-foreground`
+                            : `text-sidebar-foreground hover:bg-[#292929]`
                         }`}
                       >
-                        <div className="text-sm font-medium mb-1">
+                        <div className="text-sm font-medium flex">
+                          <span className="mr-2">{index + 1}.</span>
                           {blog.title}
-                        </div>
-                        <div className="text-xs sidebar-muted-text-light mt-1.5 flex items-center">
-                          <span className="inline-block w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                          {new Date(blog.createdAt).toLocaleDateString()}
                         </div>
                       </a>
                     );
                   })}
                 </div>
               ) : (
-                <div className="px-5 py-4 text-sm sidebar-muted-text-light">
+                <div className="px-4 py-3 text-sm sidebar-muted-text-light">
                   No posts found
                 </div>
               )}
@@ -101,13 +99,24 @@ export function AppSidebar() {
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter className="p-5 mt-auto sidebar-border-light">
+      <SidebarFooter className="p-4 mt-auto sidebar-border-light">
         <div className="flex items-center justify-between">
           <ModeToggle />
+          {isAdmin ? (
+            <Button
+              size="sm"
+              variant="default"
+              className="cursor-pointer rounded-md"
+              onClick={() => navigate("/admin/dashboard")}
+            >
+              Dashboard
+            </Button>
+          ) : null}
           {isAuthenticated ? (
             <Button
               size="sm"
               variant="default"
+              className="rounded-md"
               onClick={handleLogout}
             >
               Logout

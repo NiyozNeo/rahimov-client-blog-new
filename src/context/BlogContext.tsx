@@ -6,7 +6,8 @@ import React, {
   ReactNode,
   useCallback,
 } from "react";
-import api, {  BlogApi } from "../services/api";
+import api, { BlogApi, authEvents } from "../services/api";
+import { defaultPublicPost } from "../data/blogData";
 
 interface User {
   id: number;
@@ -28,6 +29,11 @@ interface Blog {
   updatedAt: string;
   image?: string;
   imageUrl?: string;
+  slug: string;
+  isPublic?: boolean;
+  date?: string;
+  author?: string;
+  error?: string;
 }
 
 interface BlogContextType {
@@ -37,34 +43,57 @@ interface BlogContextType {
   hasChannelAccess: boolean;
   blogs: Blog[];
   selectedPost: Blog | null;
+  showLoginModal: boolean;
+  isChannelMembershipRequired: boolean;
   loginWithTelegram: (authData: any) => Promise<boolean>;
   logout: () => void;
   selectPost: (id: string) => Promise<void>;
+  selectPostBySlug: (slug: string) => Promise<void>;
   createPost: (blogData: {
     title: string;
     content: any;
     authorName: string;
+    slug: string;
   }) => Promise<void>;
   updatePost: (
     id: string,
-    blogData: { title?: string; content?: any }
-  ) => Promise<void>;
+    blogData: { title?: string; content?: any; slug?: string }
+  ) => Promise<Blog>;
   deletePost: (id: string) => Promise<void>;
   checkChannelAccess: () => Promise<boolean>;
-  fetchBlogs: () => Promise<void>; // Added fetchBlogs to the context type
+  fetchBlogs: () => Promise<Blog[]>;
+  closeLoginModal: () => void;
 }
 
 const BlogContext = createContext<BlogContextType | undefined>(undefined);
 
-export const BlogProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const BlogProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [selectedPost, setSelectedPost] = useState<Blog | null>(null);
-  const [hasChannelAccess, setHasChannelAccess] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [hasChannelAccess, setHasChannelAccess] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [isChannelMembershipRequired, setIsChannelMembershipRequired] = useState<boolean>(false);
+
+  // Setup the auth error listener
+  useEffect(() => {
+    const handleAuthError = () => {
+      console.log("Auth error detected, showing login modal");
+      setUser(null);
+      setIsAdmin(false);
+      setIsAuthenticated(false);
+      setHasChannelAccess(false);
+      setShowLoginModal(true);
+    };
+
+    authEvents.onAuthError = handleAuthError;
+
+    return () => {
+      authEvents.onAuthError = () => {};
+    };
+  }, []);
 
   // Load user from localStorage on mount
   useEffect(() => {
@@ -73,6 +102,8 @@ export const BlogProvider: React.FC<{ children: ReactNode }> = ({
 
     if (storedUser && storedToken) {
       const parsedUser = JSON.parse(storedUser);
+      console.log("Parsed user:", parsedUser);
+      
       setUser(parsedUser);
       setIsAdmin(parsedUser.isAdmin);
       setIsAuthenticated(true);
@@ -84,28 +115,58 @@ export const BlogProvider: React.FC<{ children: ReactNode }> = ({
 
   // Load all blogs
   useEffect(() => {
-    if (isAuthenticated && hasChannelAccess) {
-      fetchBlogs();
-    }
+    console.log("Fetching blogs after authentication and channel access check");
+    void fetchBlogs();
   }, [isAuthenticated, hasChannelAccess]);
 
   const fetchBlogs = async () => {
     try {
       const fetchedBlogs = await BlogApi.getAllBlogs();
-      setBlogs(fetchedBlogs);
-      return fetchedBlogs; // Return the blogs for direct use
+      console.log("Fetched blogs:", fetchedBlogs);
+      
+      // Add the default public post to the beginning of the blogs array
+      const allBlogs = [{
+        ...defaultPublicPost,
+        id: defaultPublicPost.id.toString(),
+        createdAt: defaultPublicPost.date,
+        updatedAt: defaultPublicPost.date,
+        authorId: 0,
+        authorName: defaultPublicPost.author,
+        isPublic: true // Ensure the welcome post is marked as public
+      }, ...fetchedBlogs];
+      
+      // Sort blogs so public posts appear first, then by date
+      allBlogs.sort((a, b) => {
+        if (a.isPublic && !b.isPublic) return -1;
+        if (!a.isPublic && b.isPublic) return 1;
+        const dateA = new Date(a.createdAt || a.date || '');
+        const dateB = new Date(b.createdAt || b.date || '');
+        return dateB.getTime() - dateA.getTime();
+      });
+      
+      setBlogs(allBlogs);
+      return allBlogs;
     } catch (error) {
       console.error("Failed to fetch blogs:", error);
-      return []; // Return empty array on error
+      // Even if the fetch fails, still show the default public post
+      const fallbackBlogs = [{
+        ...defaultPublicPost,
+        id: defaultPublicPost.id.toString(),
+        createdAt: defaultPublicPost.date,
+        updatedAt: defaultPublicPost.date,
+        authorId: 0,
+        authorName: defaultPublicPost.author,
+        isPublic: true
+      }];
+      setBlogs(fallbackBlogs);
+      return fallbackBlogs;
     }
   };
 
   const loginWithTelegram = async (authData: any): Promise<boolean> => {
     try {
-      // Using regular api for this since it's not in AuthApi or BlogApi
       console.log("Login data:", authData);
 
-      // Changed from /auth/telegram-login to /telegram/validate-miniapp to match the existing API endpoint
       const response = await api.post("/login/telegram", authData, {
         headers: {
           "Content-Type": "application/json",
@@ -114,7 +175,6 @@ export const BlogProvider: React.FC<{ children: ReactNode }> = ({
       });
 
       if (response.data.token) {
-        // Save user and token
         const userData = {
           ...authData,
           isAdmin: response.data.isAdmin,
@@ -126,8 +186,8 @@ export const BlogProvider: React.FC<{ children: ReactNode }> = ({
         setUser(userData);
         setIsAdmin(response.data.isAdmin);
         setIsAuthenticated(true);
+        setShowLoginModal(false);
 
-        // Check channel access after successful login
         await checkChannelAccess();
 
         return true;
@@ -149,70 +209,93 @@ export const BlogProvider: React.FC<{ children: ReactNode }> = ({
     setSelectedPost(null);
   };
 
-  const checkChannelAccess = async (): Promise<boolean> => {
-    // Comment out channel access verification - disabled 
-    /*
-    if (!isAuthenticated) return false;
+  const closeLoginModal = () => {
+    setShowLoginModal(false);
+  };
 
-    try {
-      // Always perform a fresh check without relying on cached information
-      const hasAccess = await AuthApi.checkChannelAccess();
-      setHasChannelAccess(hasAccess);
-      return hasAccess;
-    } catch (error) {
-      // Handle network errors
-      if (error instanceof Error && error.message === "Network error when checking channel access") {
-        console.error("Network error checking channel access:", error);
-      }
-      
-      console.error("Failed to check channel access:", error);
-      setHasChannelAccess(false);
-      return false;
-    }
-    */
-    
-    // Always return true to bypass channel access check
+  const checkChannelAccess = async (): Promise<boolean> => {
     setHasChannelAccess(true);
     return true;
   };
 
-  // Memoize selectPost function to prevent infinite re-renders
   const selectPost = useCallback(async (id: string) => {
     try {
-      // First check if we already have this post in our blogs array
-      const existingPost = blogs.find(blog => blog.id === id);
-      
-      // If it's the currently selected post, don't fetch again
-      if (selectedPost && selectedPost.id === id) {
-        return;
-      }
-      
-      // If we have the post in our blogs array but it's not selected yet, set it without fetching
-      if (existingPost) {
-        // Check if the existing post has full content
-        if (existingPost.content) {
-          setSelectedPost(existingPost);
-          return;
-        }
-      }
-      
-      // Otherwise fetch the post
       const post = await BlogApi.getBlogById(id);
-      setSelectedPost(post);
+      
+      if (post && post.error === "channel_access_required") {
+        throw post;
+      }
+      
+      if (post === null && !isAuthenticated) {
+        setShowLoginModal(true);
+      } else {
+        setSelectedPost(post);
+      }
     } catch (error) {
       console.error("Failed to fetch blog post:", error);
       setSelectedPost(null);
+      throw error;
     }
-  }, [blogs, selectedPost]);
+  }, [isAuthenticated]);
+  const selectPostBySlug = useCallback(async (slug: string) => {
+    try {
+      setIsChannelMembershipRequired(false); // reset before each fetch
+      if (slug === defaultPublicPost.slug) {
+        setSelectedPost({
+          ...defaultPublicPost,
+          id: defaultPublicPost.id.toString(),
+          createdAt: defaultPublicPost.date,
+          updatedAt: defaultPublicPost.date,
+          authorId: 0,
+          authorName: defaultPublicPost.author,
+          isPublic: true
+        });
+        return;
+      }
+
+      // Check if we already have the post in our blogs array
+      // const existingPost = blogs.find(blog => blog.slug === slug);
+      // if (selectedPost && selectedPost.slug === slug) {
+      //   return;
+      // }
+      // if (existingPost?.content) {
+      //   if (existingPost.isPublic || isAuthenticated) {
+      //     setSelectedPost(existingPost);
+      //     return;
+      //   }
+      // }
+      // Fetch from API
+      const post = await BlogApi.getBlogBySlug(slug);
+      if (post?.isPublic) {
+        setSelectedPost(post);
+        return;
+      }
+      if (post && post.error === "channel_access_required") {
+        setIsChannelMembershipRequired(true);
+        setSelectedPost(null);
+        throw post;
+      }
+      if ((post && isAuthenticated) || (post?.isPublic)) {
+        setSelectedPost(post);
+      } else {
+        setSelectedPost(null); // Do not fallback to default public post for other slugs
+      }
+    } catch (error) {
+      console.error("Failed to fetch blog post by slug:", error);
+      setSelectedPost(null);
+      throw error;
+    }
+  }, [blogs, selectedPost, isAuthenticated]);
 
   const createPost = async (blogData: {
     title: string;
     content: any;
     authorName: string;
+    slug: string;
   }) => {
     try {
       await BlogApi.createBlog(blogData);
-      fetchBlogs(); // Refresh the list after creation
+      void fetchBlogs(); // Add void operator to handle the Promise
     } catch (error) {
       console.error("Failed to create blog post:", error);
       throw error;
@@ -221,17 +304,20 @@ export const BlogProvider: React.FC<{ children: ReactNode }> = ({
 
   const updatePost = async (
     id: string,
-    blogData: { title?: string; content?: any }
-  ) => {
+    blogData: { title?: string; content?: any; slug?: string }
+  ): Promise<Blog> => {
     try {
-      await BlogApi.updateBlog(id, blogData);
+      const updatedPost = await BlogApi.updateBlog(id, blogData);
 
-      // Update the selected post if it's the one being edited
       if (selectedPost && selectedPost.id === id) {
-        selectPost(id);
+        setSelectedPost(updatedPost);
       }
 
-      fetchBlogs(); // Refresh the list after update
+      setBlogs(prevBlogs => prevBlogs.map(blog => 
+        blog.id === id ? updatedPost : blog
+      ));
+
+      return updatedPost;
     } catch (error) {
       console.error("Failed to update blog post:", error);
       throw error;
@@ -242,13 +328,11 @@ export const BlogProvider: React.FC<{ children: ReactNode }> = ({
     try {
       await BlogApi.deleteBlog(id);
 
-      // Reset selected post if it's the one being deleted
       if (selectedPost && selectedPost.id === id) {
         setSelectedPost(null);
       }
 
-      // Update the blogs list
-      setBlogs(blogs.filter((blog) => blog.id !== id));
+      setBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== id));
     } catch (error) {
       console.error("Failed to delete blog post:", error);
       throw error;
@@ -264,14 +348,18 @@ export const BlogProvider: React.FC<{ children: ReactNode }> = ({
         hasChannelAccess,
         blogs,
         selectedPost,
+        showLoginModal,
         loginWithTelegram,
         logout,
         selectPost,
+        selectPostBySlug,
         createPost,
         updatePost,
         deletePost,
         checkChannelAccess,
-        fetchBlogs, // Added fetchBlogs to the context value
+        fetchBlogs,
+        closeLoginModal,
+        isChannelMembershipRequired, // expose to context
       }}
     >
       {children}

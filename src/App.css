@@ -78,7 +78,7 @@ body {
 }
 
 .admin-dashboard .posts-table-container {
-  background-color: white;
+  background-color: var(--backgound);
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -97,11 +97,11 @@ body {
 .admin-dashboard .posts-table td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border);
 }
 
 .admin-dashboard .posts-table th {
-  background-color: #f5f5f5;
+  background-color: var(--card);
   font-weight: bold;
 }
 
@@ -110,7 +110,7 @@ body {
 }
 
 .post-form {
-  background-color: white;
+  background-color: var(--background);
   padding: 0;
   box-shadow: none;
   border-radius: 0;
@@ -120,7 +120,6 @@ body {
 
 .post-form h1 {
   margin-bottom: 20px;
-  color: #333;
   font-size: 32px;
 }
 
@@ -132,16 +131,14 @@ body {
   display: block;
   margin-bottom: 8px;
   font-weight: bold;
-  color: #333;
 }
 
 .post-form input {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 4px;
-  background-color: #f9f9f9;
-  color: #333; 
+  background-color: var(--background);
 }
 
 .post-form input:focus {

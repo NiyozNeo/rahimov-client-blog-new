@@ -3,6 +3,11 @@ import axios from "axios";
 // Define the base URL for API requests
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
+// Global event for authentication errors
+export const authEvents = {
+  onAuthError: () => {},
+};
+
 // Create an axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -22,6 +27,26 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Add a response interceptor to handle 401 errors globally
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle 401 Unauthorized errors
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      console.error("Authentication error:", error.response.data);
+      
+      // Remove auth data
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("user");
+      
+      // Trigger auth error event
+      authEvents.onAuthError();
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 export const AuthApi = {
   validateMiniApp: async (initData: string) => {
     try {
@@ -35,6 +60,9 @@ export const AuthApi = {
     }
   },
 
+  // No more adminLogin function with password verification
+  // The backend will determine admin status based on the user's Telegram ID
+  
   checkChannelAccess: async (): Promise<boolean> => {
     try {
       const response = await api.get("/telegram/check-channel-access", {
@@ -89,10 +117,52 @@ export const BlogApi = {
 
   getBlogById: async (id: string) => {
     try {
-      const response = await api.get(`/blog/id/${id}`);
+      const response = await api.get(`/blog/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          token: localStorage.getItem("auth_token") || "",
+        },
+      });
       return response.data;
     } catch (error) {
+      if(axios.isAxiosError(error) && error.response?.status === 401) {
+        console.error("Unauthorized access:", error.response.data);
+        return null; // or handle unauthorized access as needed
+      }
+      // Handle channel membership error (403)
+      if(axios.isAxiosError(error) && error.response?.status === 403 && 
+         error.response.data?.message === "Access denied: Not a member of the required channel") {
+        console.error("Channel access denied:", error.response.data);
+        // Return a special error object to indicate channel access issue
+        return { error: "channel_access_required" };
+      }
       console.error(`Error fetching blog ${id}:`, error);
+      throw error;
+    }
+  },
+
+  getBlogBySlug: async (slug: string) => {
+    try {
+      const response = await api.get(`/blog/slug/${slug}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          token: localStorage.getItem("auth_token") || "",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        console.error("Unauthorized access:", error.response.data);
+        return null;
+      }
+      if (axios.isAxiosError(error) && error.response?.status === 403 &&
+        error.response.data?.message === "Access denied: Not a member of the required channel") {
+        console.error("Channel access denied:", error.response.data);
+        return { error: "channel_access_required" };
+      }
+      console.error(`Error fetching blog with slug ${slug}:`, error);
       throw error;
     }
   },
@@ -106,11 +176,11 @@ export const BlogApi = {
       throw error;
     }
   },
-
   createBlog: async (blogData: {
     title: string;
     content: any;
     authorName: string;
+    slug: string;
   }) => {
     try {
       const response = await api.post("/blog", blogData, {
@@ -128,8 +198,7 @@ export const BlogApi = {
   },
 
   updateBlog: async (
-    id: string,
-    blogData: { title?: string; content?: any }
+    id: string,    blogData: { title?: string; content?: any; slug?: string }
   ) => {
     try {
       const response = await api.put(`/blog/${id}`, blogData);

@@ -5,8 +5,33 @@ interface Post {
   content: string;
   author: string;
   date: string;
-  summary: string;
+  slug: string;
+  isPublic?: boolean;
 }
+
+export const defaultPublicPost: Post = {
+  id: 0,
+  title: "Welcome to Our Blog",
+  content: `<h1>Welcome to Our Technical Blog!</h1>
+  <p>This is a public post that's accessible to everyone. Here you'll find in-depth articles about:</p>
+  <ul>
+    <li><strong>Web Development</strong> - Latest trends, best practices, and tutorials</li>
+    <li><strong>Programming Tips</strong> - Practical coding advice and problem-solving techniques</li>
+    <li><strong>Technology Insights</strong> - Deep dives into modern tech stack and tools</li>
+  </ul>
+  <h2>How to Access Our Content</h2>
+  <p>While this post is public, our premium content requires authentication. To access all articles:</p>
+  <ol>
+    <li>Click the "Login" button in the navigation</li>
+    <li>Log in with your Telegram account</li>
+    <li>Join our Telegram channel for full access</li>
+  </ol>
+  <p>Stay tuned for regular updates and technical insights!</p>`,
+  author: "Admin",
+  date: new Date().toISOString().split('T')[0],
+  slug: "welcome",
+  isPublic: true
+};
 
 export const blogPosts: Post[] = [
   {
@@ -24,7 +49,7 @@ export const blogPosts: Post[] = [
     <p>In this post, we'll cover the basics of React and how to set up your first React application.</p>`,
     author: "Admin",
     date: "2025-04-01",
-    summary: "An introduction to React and its core concepts"
+    slug: "getting-started-with-react"
   },
   {
     id: 2,
@@ -42,7 +67,7 @@ export const blogPosts: Post[] = [
     <p>In this tutorial, we'll explore how these hooks work and when to use them in your React applications.</p>`,
     author: "Admin",
     date: "2025-04-05",
-    summary: "Learn how to use React Hooks in your applications"
+    slug: "understanding-react-hooks"
   },
   {
     id: 3,
@@ -66,6 +91,6 @@ export const blogPosts: Post[] = [
     <p>In this guide, we'll walk through creating a responsive grid-based layout for a blog site.</p>`,
     author: "Admin",
     date: "2025-04-10",
-    summary: "Create modern layouts using CSS Grid"
+    slug: "building-responsive-uis-with-css-grid"
   }
 ];
