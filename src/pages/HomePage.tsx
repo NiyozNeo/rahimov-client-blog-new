@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBlogContext } from '../context/BlogContext';
 import { Button } from '../components/ui/button';
@@ -18,6 +18,17 @@ interface Blog {
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { blogs, isAdmin } = useBlogContext();
+
+  // Redirect to /post/first-public-slug if on home page
+  useEffect(() => {
+    if (blogs.length > 0) {
+      // Find the first public blog post
+      const firstPublic = blogs.find(blog => blog.isPublic);
+      if (firstPublic) {
+        navigate(`/post/${firstPublic.slug}`, { replace: true });
+      }
+    }
+  }, [blogs, navigate]);
   
   // Sort blogs by date (newest first), handling both date formats
   const sortedBlogs = [...blogs].sort((a: Blog, b: Blog) => {
