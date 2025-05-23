@@ -25,7 +25,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
-              <Route path="post/:slug" element={<PostDetail />} />
+              <Route path=":slug" element={<PostDetail />} />
               <Route path="login" element={<Login />} />
               <Route path="admin" element={<Login />} />
               <Route path="admin/dashboard" element={<AdminDashboard />} />

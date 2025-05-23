@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
       // Find the first public blog post
       const firstPublic = blogs.find(blog => blog.isPublic);
       if (firstPublic) {
-        navigate(`/post/${firstPublic.slug}`, { replace: true });
+        navigate(`/${firstPublic.slug}`, { replace: true });
       }
     }
   }, [blogs, navigate]);
@@ -83,7 +83,7 @@ const HomePage: React.FC = () => {
                 </div>
                 <Button 
                   variant="default"
-                  onClick={() => navigate(`/post/${blog.slug}`)}
+                  onClick={() => navigate(`/${blog.slug}`)}
                 >
                   Read More
                 </Button>
@@ -119,7 +119,7 @@ const HomePage: React.FC = () => {
               <Button 
                 variant="default" 
                 className="w-full" 
-                onClick={() => navigate(isAdmin ? `/post/${blog.slug}` : '/login')}
+                onClick={() => navigate(isAdmin ? `/${blog.slug}` : '/login')}
               >
                 {isAdmin ? 'Read More' : 'Login to Read'}
               </Button>

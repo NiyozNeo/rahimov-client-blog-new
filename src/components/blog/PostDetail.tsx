@@ -179,7 +179,7 @@ const PostDetail: React.FC = () => {
               Please log in with Telegram to read our blog posts.
             </p>
           </div>
-          <Login returnUrl={`/post/${slug}`} />
+          <Login returnUrl={`/${slug}`} />
         </div>
       );
     }
@@ -209,7 +209,7 @@ const PostDetail: React.FC = () => {
             Please log in with Telegram to read our blog posts.
           </p>
         </div>
-        <Login returnUrl={`/post/${slug}`} />
+        <Login returnUrl={`/${slug}`} />
       </div>
     );
   }

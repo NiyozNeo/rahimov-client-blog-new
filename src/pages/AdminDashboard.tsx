@@ -58,8 +58,8 @@ const AdminDashboard: React.FC = () => {
                 <td>{blog.title}</td>
                 <td>{blog.createdAt}</td>                <td className="actions space-x-2">
                   <Link
-                    to={`/post/${blog.slug}`}
-                    className="inline-block"
+                    to={`/${blog.slug}`}
+                    className="text-primary hover:text-primary/80"
                   >
                     <Button variant="outline" size="sm">
                       View

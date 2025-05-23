@@ -125,14 +125,14 @@ const PostForm: React.FC<PostFormProps> = ({ mode = 'create' }) => {
         authorName: formData.authorName,
         slug: formData.slug
       });
-      navigate(`/post/${formData.slug}`);
+      navigate(`/${formData.slug}`);
     } else if (mode === 'edit' && id) {
       const updatedPost = await updatePost(id, {
         title: formData.title,
         content: formData.content,
         slug: formData.slug
       });
-      navigate(`/post/${updatedPost.slug}`);
+      navigate(`/${updatedPost.slug}`);
     }
   };
 

@@ -33,7 +33,11 @@ export function AppSidebar() {
   );  // Handle blog item click - now navigate to the post using slug
   const handleBlogClick = (blogSlug: string, event: React.MouseEvent) => {
     event.preventDefault();
-    navigate(`/post/${blogSlug}`);
+    if (blogSlug) {
+      navigate(`/${blogSlug}`);
+    } else {
+      navigate("/1");
+    }
   };
 
   // Handle logout
@@ -69,11 +73,12 @@ export function AppSidebar() {
             <div className="overflow-y-auto max-h-[calc(100vh-240px)]">
               {filteredBlogs.length > 0 ? (
                 <div>
-                  {filteredBlogs.map((blog: Blog, index: number) => {                    const isActive = location.pathname === `/post/${blog.slug}`;
+                  {filteredBlogs.map((blog: Blog, index: number) => {
+                    const isActive = location.pathname === `/${blog.slug}`;
                     return (
                       <a
                         key={blog.id}
-                        href={`/post/${blog.slug}`}
+                        href={`/${blog.slug}`}
                         onClick={(e) => handleBlogClick(blog.slug, e)}
                         className={`block px-4 py-2.5 transition-colors mx-2 rounded-md ${
                           isActive
