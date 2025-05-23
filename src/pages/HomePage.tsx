@@ -72,7 +72,7 @@ const HomePage: React.FC = () => {
               <div 
                 className="prose dark:prose-invert max-w-none mb-6"
                 dangerouslySetInnerHTML={{ 
-                  __html: blog.content?.split('</h1>')[1]?.split('<h2>')[0] || blog.content || ''
+                  __html: blog.content || '<p>No content available</p>'
                 }}
               />
               <div className="flex justify-between items-center mt-8">

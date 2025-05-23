@@ -52,17 +52,24 @@ const PostForm: React.FC<PostFormProps> = ({ mode = 'create' }) => {
 
   useEffect(() => {
     if (mode === 'edit' && id) {
-      const post = blogs.find(blog => blog.id === id);
-      if (post) {
-        setFormData({
-          title: post.title,
-          content: post.content,
-          slug: post.slug || '',
-          authorName: post.authorName
-        });
-      }
+      const fetchBlogData = async () => {
+        try {
+          const post = await BlogApi.getBlogById(id);
+          if (post) {
+            setFormData({
+              title: post.title,
+              content: post.content,
+              slug: post.slug || '',
+              authorName: post.authorName
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching blog data:', error);
+        }
+      };
+      void fetchBlogData();
     }
-  }, [mode, id, blogs]);
+  }, [mode, id]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
