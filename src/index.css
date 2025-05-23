@@ -4,7 +4,44 @@
 @layer base {
   :root {
     --radius: 0.5rem;
-    /* Light mode - modern colors with gradients */
+    /* --- Modern Light Mode Palette (2024) --- */
+    --background: #F5F7FA;
+    --foreground: #1A202C;
+    --card: #FFFFFF;
+    --card-foreground: #1A202C;
+    --popover: #FFFFFF;
+    --popover-foreground: #1A202C;
+    --primary: #6366F1;
+    --primary-foreground: #FFFFFF;
+    --secondary: #E0E7EF;
+    --secondary-foreground: #6366F1;
+    --muted: #F1F5F9;
+    --muted-foreground: #64748B;
+    --accent: #E0E7EF;
+    --accent-foreground: #6366F1;
+    --destructive: #EF4444;
+    --destructive-foreground: #FFFFFF;
+    --border: #E5E7EB;
+    --input: #E5E7EB;
+    --ring: rgba(99, 102, 241, 0.3);
+    /* --- Sidebar Light --- */
+    --sidebar-background: #E0E7EF;
+    --sidebar-foreground: #1A202C;
+    --sidebar-card: #F1F5F9;
+    --sidebar-card-foreground: #1A202C;
+    --sidebar-primary: #6366F1;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-secondary: #E0E7EF;
+    --sidebar-secondary-foreground: #6366F1;
+    --sidebar-muted: #F1F5F9;
+    --sidebar-muted-foreground: #64748B;
+    --sidebar-accent: #E0E7EF;
+    --sidebar-accent-foreground: #6366F1;
+    --sidebar-border: #E5E7EB;
+    --sidebar-ring: rgba(99, 102, 241, 0.3);
+    /* --- End Modern Palette --- */
+    /*
+    // Old palette (commented for easy revert):
     --background: rgba(248, 250, 252, 1);
     --foreground: rgba(15, 23, 42, 1);
     --card: rgba(255, 255, 255, 1);
@@ -24,38 +61,56 @@
     --border: rgba(226, 232, 240, 1);
     --input: rgba(226, 232, 240, 1);
     --ring: rgba(79, 70, 229, 0.3);
-    
+    */
     /* Chart colors - vibrant palette */
     --chart-1: rgba(79, 70, 229, 1);
     --chart-2: rgba(56, 189, 248, 1);
     --chart-3: rgba(45, 212, 191, 1);
     --chart-4: rgba(232, 121, 249, 1);
     --chart-5: rgba(251, 146, 60, 1);
-    
-    /* Sidebar light theme - converted to RGBA */
-    --bg-background: rgb(255, 0, 0);
-    --sidebar-background: rgba(10, 10, 20, 1);
-    --sidebar-foreground: rgba(255, 255, 255, 1); 
-    --sidebar-card: rgba(19, 26, 46, 1);
-    --sidebar-card-foreground: rgba(255, 255, 255, 1);
-    --sidebar-primary: rgba(142, 73, 232, 1);
-    --sidebar-primary-foreground: rgba(255, 255, 255, 1);
-    --sidebar-secondary: rgba(28, 38, 65, 1);
-    --sidebar-secondary-foreground: rgba(255, 255, 255, 1);
-    --sidebar-muted: rgba(26, 35, 60, 1);
-    --sidebar-muted-foreground: rgba(162, 177, 208, 1);
-    --sidebar-accent: rgba(26, 35, 60, 1);
-    --sidebar-accent-foreground: rgba(255, 255, 255, 1);
-    --sidebar-border: rgba(253, 14, 177, 1);
-    --sidebar-ring: rgba(142, 73, 232, 0.3);
-    
     /* Others */
     --destructive-foreground: rgba(255, 255, 255, 1);
     --bg-popover: rgba(255, 255, 255, 0.98);
   }
    
   .dark {
-    /* Dark mode - modern colors with rich gradients */
+    --background: #181A20;
+    --foreground: #F3F4F6;
+    --card: #23262F;
+    --card-foreground: #F3F4F6;
+    --popover: #23262F;
+    --popover-foreground: #F3F4F6;
+    --primary: #818CF8;
+    --primary-foreground: #FFFFFF;
+    --secondary: #23262F;
+    --secondary-foreground: #818CF8;
+    --muted: #23262F;
+    --muted-foreground: #A1A1AA;
+    --accent: #23262F;
+    --accent-foreground: #818CF8;
+    --destructive: #F87171;
+    --destructive-foreground: #FFFFFF;
+    --border: #2D2F36;
+    --input: #2D2F36;
+    --ring: rgba(129, 140, 248, 0.3);
+    /* --- Sidebar Dark --- */
+    --sidebar-background: #181A20;
+    --sidebar-foreground: #F3F4F6;
+    --sidebar-card: #23262F;
+    --sidebar-card-foreground: #F3F4F6;
+    --sidebar-primary: #818CF8;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-secondary: #23262F;
+    --sidebar-secondary-foreground: #818CF8;
+    --sidebar-muted: #23262F;
+    --sidebar-muted-foreground: #A1A1AA;
+    --sidebar-accent: #23262F;
+    --sidebar-accent-foreground: #818CF8;
+    --sidebar-border: #2D2F36;
+    --sidebar-ring: rgba(129, 140, 248, 0.3);
+    /* --- End Modern Palette --- */
+    /*
+    // Old palette (commented for easy revert):
     --background: rgba(18, 18, 18, 1);
     --foreground: rgba(218, 218, 218, 1);
     --card: rgba(17, 24, 39, 1);
@@ -75,30 +130,13 @@
     --border: rgba(30, 41, 59, 1);
     --input: rgba(30, 41, 59, 1);
     --ring: rgba(124, 58, 237, 0.3);
-    
+    */
     /* Chart colors - vibrant dark mode palette */
     --chart-1: rgba(124, 58, 237, 1);
     --chart-2: rgba(77, 200, 252, 1);
     --chart-3: rgba(66, 225, 204, 1);
     --chart-4: rgba(238, 147, 252, 1);
     --chart-5: rgba(255, 168, 92, 1);
-    
-    /* Sidebar dark theme - upgraded with better color contrast and gradients */
-    --sidebar-background: #1A1A1A;
-    --sidebar-foreground: 213, 31%, 91%;
-    --sidebar-card: 222, 47%, 11%; 
-    --sidebar-card-foreground: 213, 31%, 91%;
-    --sidebar-primary: 263, 85%, 60%;
-    --sidebar-primary-foreground: 0, 0%, 100%;
-    --sidebar-secondary: 217, 33%, 17%;
-    --sidebar-secondary-foreground: 210, 40%, 98%;
-    --sidebar-muted: 215, 27%, 16%;
-    --sidebar-muted-foreground: 217, 19%, 73%;  
-    --sidebar-accent: 215, 27%, 16%;
-    --sidebar-accent-foreground: 210, 40%, 98%;
-    --sidebar-border: 216, 34%, 17%;
-    --sidebar-ring: 263, 85%, 60%, 0.3;
-    
     /* Others */
     --destructive-foreground: 0 0% 100%;
     --bg-popover: rgba(17, 24, 39, 0.98);
@@ -279,12 +317,7 @@ p {
 
 /* Login container styles */
 .post-login-container {
-  background: linear-gradient(135deg, 
-    hsla(var(--sidebar-primary), 0.1), 
-    hsla(var(--sidebar-background), 0.05)
-  );
   border-radius: 1rem;
   padding: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 

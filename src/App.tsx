@@ -13,6 +13,9 @@ import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
 import Logout from "./pages/Logout";
 import HomePage from "./pages/HomePage";
+import PaymentHistory from "./pages/admin/PaymentHistory";
+import Users from "./pages/admin/Users";
+import Subscriptions from "./pages/admin/Subscriptions";
 
 // Components
 import PostDetail from "./components/blog/PostDetail";
@@ -31,6 +34,9 @@ const App: React.FC = () => {
               <Route path="admin/dashboard" element={<AdminDashboard />} />
               <Route path="admin/new" element={<CreatePost />} />
               <Route path="admin/edit/:id" element={<EditPost />} />
+              <Route path="admin/payments" element={<PaymentHistory />} />
+              <Route path="admin/users" element={<Users />} />
+              <Route path="admin/subscriptions" element={<Subscriptions />} />
               <Route path="logout" element={<Logout />} />
             </Route>
           </Routes>

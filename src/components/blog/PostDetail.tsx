@@ -167,10 +167,8 @@ const PostDetail: React.FC = () => {
     // For all other posts, if not authenticated, show login
     if (!isAuthenticated) {
       return (
-        <div className="post-login-container">
-          <div
-            className={`p-6 bg-gradient-to-br ${gradientStartClass} ${gradientEndClass} border ${borderColorClass} rounded-xl mb-6`}
-          >
+        <div className="post-login-container ">
+      
             <h2 className={`text-xl font-bold mb-2 flex items-center`}>
               <Shield className={`h-5 w-5 mr-2`} />
               Authentication Required
@@ -178,7 +176,6 @@ const PostDetail: React.FC = () => {
             <p className={`${textClass} mb-4`}>
               Please log in with Telegram to read our blog posts.
             </p>
-          </div>
           <Login returnUrl={`/${slug}`} />
         </div>
       );

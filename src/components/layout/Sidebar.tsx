@@ -50,7 +50,7 @@ export function AppSidebar() {
     <Sidebar
       side="left"
       variant="sidebar"
-      className="sidebar-background"
+      className="bg-[var(--sidebar-background)] text-[var(--sidebar-foreground)] sidebar-background"
     >
       <SidebarHeader className="p-4">
         <h1 className="text-xl font-bold mb-3">
@@ -80,11 +80,11 @@ export function AppSidebar() {
                         key={blog.id}
                         href={`/${blog.slug}`}
                         onClick={(e) => handleBlogClick(blog.slug, e)}
-                        className={`block px-4 py-2.5 transition-colors mx-2 rounded-md ${
-                          isActive
-                            ? `bg-[#212121] text-sidebar-primary-foreground`
-                            : `text-sidebar-foreground hover:bg-[#292929]`
-                        }`}
+                        className={`block px-4 py-2.5 mx-2 rounded-md transition-colors
+                          ${isActive
+                            ? 'font-semibold bg-[var(--sidebar-accent)] border-l-4 border-[var(--sidebar-primary)] text-[var(--sidebar-primary)]'
+                            : 'hover:bg-[var(--sidebar-accent)] hover:text-[var(--sidebar-primary)] text-[var(--sidebar-foreground)]'}
+                        `}
                       >
                         <div className="text-sm font-medium flex">
                           <span className="mr-2">{index + 1}.</span>
