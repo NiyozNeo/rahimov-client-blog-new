@@ -156,7 +156,7 @@ const PostDetail: React.FC = () => {
 
   if (!selectedPost) {
     // If viewing the welcome page, always show loading spinner until loaded (never show login)
-    if (slug === "welcome") {
+    if (slug === "pm") {
       return (
         <div className="flex flex-col items-center justify-center h-64 space-y-4">
           <div className="w-12 h-12 border-4 border-t-indigo-500 border-indigo-200 rounded-full animate-spin"></div>
