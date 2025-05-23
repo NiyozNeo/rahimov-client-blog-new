@@ -37,7 +37,7 @@
     --sidebar-muted-foreground: #64748B;
     --sidebar-accent: #E0E7EF;
     --sidebar-accent-foreground: #6366F1;
-    --sidebar-border: #E5E7EB;
+    --sidebar-border: hsla(220, 14%, 90%, 0.5);
     --sidebar-ring: rgba(99, 102, 241, 0.3);
     /* --- End Modern Palette --- */
     /*
@@ -106,7 +106,7 @@
     --sidebar-muted-foreground: #A1A1AA;
     --sidebar-accent: #23262F;
     --sidebar-accent-foreground: #818CF8;
-    --sidebar-border: #2D2F36;
+    --sidebar-border: hsla(230, 9%, 20%, 0.5);
     --sidebar-ring: rgba(129, 140, 248, 0.3);
     /* --- End Modern Palette --- */
     /*

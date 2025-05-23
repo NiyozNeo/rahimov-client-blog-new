@@ -3,12 +3,9 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useBlogContext } from "../../context/BlogContext";
 import { Button } from "../ui/button";
 import Login from "../../pages/Login";
-import {
-  Edit,
-  Trash2,
-  Shield,
-} from "lucide-react";
+import { Edit, Trash2, Shield } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
+import { useSidebar } from "../ui/sidebar";
 
 interface PostParams {
   slug: string;
@@ -37,6 +34,8 @@ const PostDetail: React.FC = () => {
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const { state } = useSidebar();
+
   useEffect(() => {
     const loadPost = async () => {
       if (!slug) return;
@@ -47,7 +46,14 @@ const PostDetail: React.FC = () => {
           await selectPostBySlug(slug);
         } catch (error) {
           console.error("Error loading post:", error);
-          if (!(error && typeof error === 'object' && 'error' in error && error.error === 'channel_access_required')) {
+          if (
+            !(
+              error &&
+              typeof error === "object" &&
+              "error" in error &&
+              error.error === "channel_access_required"
+            )
+          ) {
             setLoadError("Failed to load the blog post. Please try again.");
           }
         } finally {
@@ -104,10 +110,10 @@ const PostDetail: React.FC = () => {
               Failed to Load Post
             </h2>
             <p className={`${mutedTextClass} mb-4`}>{loadError}</p>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="flex items-center gap-2"
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
             >
               Return to Home
             </Button>
@@ -121,11 +127,17 @@ const PostDetail: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
         <h1 className="text-4xl font-bold mb-10 mt-6 text-center">
-          {selectedPost?.title || (slug && slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' '))}
+          {selectedPost?.title ||
+            (slug &&
+              slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " "))}
         </h1>
         <div className="text-center">
-          <div className="text-2xl font-semibold mb-4">Sizda obuna aniqlanmadi.</div>
-          <div className="text-base text-muted-foreground mb-6">Inshoni o'qish uchun obunangizni yangilang.</div>
+          <div className="text-2xl font-semibold mb-4">
+            Sizda obuna aniqlanmadi.
+          </div>
+          <div className="text-base text-muted-foreground mb-6">
+            Inshoni o'qish uchun obunangizni yangilang.
+          </div>
           <a
             href="https://t.me/parallelmuhit_bot"
             target="_blank"
@@ -143,8 +155,15 @@ const PostDetail: React.FC = () => {
                 stroke="currentColor"
                 className="w-7 h-7 text-yellow-400"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-4h.01M12 16h.01" />
-                <path fill="currentColor" d="M12 17a1 1 0 100-2 1 1 0 000 2zm0-4a1 1 0 100-2 1 1 0 000 2z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-4h.01M12 16h.01"
+                />
+                <path
+                  fill="currentColor"
+                  d="M12 17a1 1 0 100-2 1 1 0 000 2zm0-4a1 1 0 100-2 1 1 0 000 2z"
+                />
               </svg>
               Botga o'tish
             </Button>
@@ -168,14 +187,13 @@ const PostDetail: React.FC = () => {
     if (!isAuthenticated) {
       return (
         <div className="post-login-container ">
-      
-            <h2 className={`text-xl font-bold mb-2 flex items-center`}>
-              <Shield className={`h-5 w-5 mr-2`} />
-              Authentication Required
-            </h2>
-            <p className={`${textClass} mb-4`}>
-              Please log in with Telegram to read our blog posts.
-            </p>
+          <h2 className={`text-xl font-bold mb-2 flex items-center`}>
+            <Shield className={`h-5 w-5 mr-2`} />
+            Authentication Required
+          </h2>
+          <p className={`${textClass} mb-4`}>
+            Please log in with Telegram to read our blog posts.
+          </p>
           <Login returnUrl={`/${slug}`} />
         </div>
       );
@@ -196,9 +214,7 @@ const PostDetail: React.FC = () => {
         <div
           className={`p-6 bg-gradient-to-br ${gradientStartClass} ${gradientEndClass} border ${borderColorClass} rounded-xl mb-6`}
         >
-          <h2
-            className={`text-xl font-bold mb-2 flex items-center`}
-          >
+          <h2 className={`text-xl font-bold mb-2 flex items-center`}>
             <Shield className={`h-5 w-5 mr-2`} />
             Authentication Required
           </h2>
@@ -224,14 +240,13 @@ const PostDetail: React.FC = () => {
               Channel Access Required
             </h2>
             <p className={`${mutedTextClass} mb-4`}>
-              {isChannelMembershipRequired 
+              {isChannelMembershipRequired
                 ? "Access denied: Not a member of the required channel. Please join our Telegram channel to read this post."
-                : "To access blog posts, you need to join our Telegram channel. Once you're a member, you'll have full access to all content."
-              }
+                : "To access blog posts, you need to join our Telegram channel. Once you're a member, you'll have full access to all content."}
             </p>
-            <a 
-              href="https://t.me/parallelmuhit_bot" 
-              target="_blank" 
+            <a
+              href="https://t.me/parallelmuhit_bot"
+              target="_blank"
               rel="noopener noreferrer"
             >
               <Button variant="outline" className="flex items-center gap-2">
@@ -266,17 +281,17 @@ const PostDetail: React.FC = () => {
   };
 
   return (
-    <article className="max-w-full">
+    <article className={`flex flex-col ${state === "collapsed" ? "items-center" : ""} md:mr-3 transition-all duration-300 ease-in-out`}>
       {/* Large Title - centered with no left margin */}
-      <h1 className={`text-4xl font-bold  mb-10 mt-6`}>
-        {selectedPost.title}
-      </h1>
+      <h1 className={`text-4xl font-bold mb-10 mt-6 transition-all duration-300 ease-in-out max-w-110 `}>{selectedPost.title}</h1>
 
-      {/* Post content - no left padding */}      <div
-        className={`prose ${proseClass} max-w-none
+      <div
+        className={`prose ${proseClass} max-w-none transition-all duration-300 ease-in-out
         prose-headings:mt-6
         prose-headings:mb-4
-        prose-p:my-5        prose-a:text-${isDark ? "indigo-400" : "indigo-600"} 
+        prose-p:my-5        prose-a:text-${
+          isDark ? "indigo-400" : "indigo-600"
+        } 
         prose-a:underline
         prose-a:hover:text-${isDark ? "indigo-300" : "indigo-700"}
         prose-a:cursor-pointer
@@ -295,7 +310,9 @@ const PostDetail: React.FC = () => {
         prose-ul:list-disc prose-ul:pl-5 prose-ul:my-5
         prose-ol:list-decimal prose-ol:pl-5 prose-ol:my-5
         prose-li:my-2 prose-li:pl-1.5
-        prose-pre:p-4 prose-pre:${isDark ? "bg-slate-800" : "bg-slate-100"} prose-pre:rounded-md
+        prose-pre:p-4 prose-pre:${
+          isDark ? "bg-slate-800" : "bg-slate-100"
+        } prose-pre:rounded-md
         ${isDark ? "prose-strong:text-white" : "prose-strong:text-slate-900"}
         ${isDark ? "prose-em:text-slate-200" : "prose-em:text-slate-700"}`}
         dangerouslySetInnerHTML={{ __html: selectedPost.content }}
@@ -304,12 +321,9 @@ const PostDetail: React.FC = () => {
       {/* Admin actions - with separator line above like in the example */}
       {isAdmin && (
         <>
-          <hr className="my-8 border-t border-slate-200 dark:border-slate-700" />
+          {/* <hr className="my-8 border-t border-slate-200 dark:border-slate-700" /> */}
           <div className="flex flex-wrap gap-5">
-            <Button
-              variant="outline"
-              asChild
-            >
+            <Button variant="outline" asChild>
               <Link to={`/admin/edit/${selectedPost.id}`}>
                 <Edit className="mr-2" size={18} />
                 Edit Post

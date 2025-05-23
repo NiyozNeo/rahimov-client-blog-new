@@ -50,19 +50,22 @@ export function AppSidebar() {
     <Sidebar
       side="left"
       variant="sidebar"
-      className="bg-[var(--sidebar-background)] text-[var(--sidebar-foreground)] sidebar-background"
+      className="bg-[var(--sidebar-background)] text-[var(--sidebar-foreground)] sidebar-background border-r-[var(--sidebar-border)] backdrop-blur-none bg-opacity-100"
     >
       <SidebarHeader className="p-4">
         <h1 className="text-xl font-bold mb-3">
           <a href="/" className="hover:text-sidebar-primary transition-colors">Parallel Muhit</a>
         </h1>
-
+        <ModeToggle />
         <Input
           type="search"
           placeholder="Search posts..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="bg-sidebar-card rounded-md"
+          autoFocus={false}
+          tabIndex={-1}
+          autoComplete="off"
+          className="bg-sidebar-card rounded-md border-[var(--sidebar-border)] text-[var(--sidebar-foreground)] placeholder:text-sidebar-muted-text-light focus:outline-none focus:ring-2 focus:ring-sidebar-primary focus:border-transparent"
         />
       </SidebarHeader>
 
@@ -107,7 +110,7 @@ export function AppSidebar() {
       {/* Footer */}
       <SidebarFooter className="p-4 mt-auto sidebar-border-light">
         <div className="flex items-center justify-between">
-          <ModeToggle />
+
           {isAdmin ? (
             <Button
               size="sm"
