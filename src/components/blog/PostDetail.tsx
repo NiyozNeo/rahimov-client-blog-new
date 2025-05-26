@@ -63,6 +63,7 @@ const PostDetail: React.FC = () => {
     };
     loadPost();
   }, [slug, isAuthenticated, hasChannelAccess, selectPostBySlug, selectedPost]);
+console.log(state);
 
   // Check if dark mode is active
   const isDark =
