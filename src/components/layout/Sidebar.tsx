@@ -90,7 +90,7 @@ export function AppSidebar() {
                         `}
                       >
                         <div className="text-sm font-medium flex">
-                          <span className="mr-2">{index === 0 ? 1 : filteredBlogs.length - index + 1}.</span>
+                          <span className="mr-2">{index === 0 ? '' : filteredBlogs.length - index + 1}.</span>
                           {blog.title}
                         </div>
                       </a>
