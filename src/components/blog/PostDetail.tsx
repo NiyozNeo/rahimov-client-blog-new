@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useBlogContext } from "../../context/BlogContext";
 import { Button } from "../ui/button";
 import Login from "../../pages/Login";
-import { Edit, Trash2, Shield } from "lucide-react";
+import { Edit, Trash2, Shield, SquareArrowOutUpRight } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 import { useSidebar } from "../ui/sidebar";
 
@@ -74,13 +74,6 @@ const PostDetail: React.FC = () => {
   const textClass = isDark ? "text-slate-200" : "text-slate-800";
   const mutedTextClass = isDark ? "text-slate-400" : "text-slate-500";
   const borderClass = isDark ? "border-slate-700" : "border-slate-200";
-  const gradientStartClass = isDark
-    ? "from-indigo-900/10"
-    : "from-indigo-500/10";
-  const gradientEndClass = isDark ? "to-purple-900/10" : "to-purple-500/10";
-  const borderColorClass = isDark
-    ? "border-indigo-500/20"
-    : "border-indigo-300/30";
   const buttonBorderClass = isDark ? "border-slate-600" : "border-slate-300";
   const deleteButtonBgClass = isDark ? "bg-red-900/30" : "bg-red-50";
   const deleteButtonTextClass = isDark ? "text-red-200" : "text-red-600";
@@ -126,56 +119,32 @@ const PostDetail: React.FC = () => {
   if (isChannelMembershipRequired) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <h1 className="text-4xl font-bold mb-10 mt-6 text-center">
-          {selectedPost?.title ||
-            (slug &&
-              slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " "))}
-        </h1>
-        <div className="text-center">
-          <div className="text-2xl font-semibold mb-4">
-            Sizda obuna aniqlanmadi.
-          </div>
-          <div className="text-base text-muted-foreground mb-6">
-            Inshoni o'qish uchun obunangizni yangilang.
-          </div>
-          <a
-            href="https://t.me/parallelmuhit_bot"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button
-              className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-xl font-semibold px-8 py-3 rounded-xl shadow-md transition-colors"
-              style={{ minWidth: 220 }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-7 h-7 text-yellow-400"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-4h.01M12 16h.01"
-                />
-                <path
-                  fill="currentColor"
-                  d="M12 17a1 1 0 100-2 1 1 0 000 2zm0-4a1 1 0 100-2 1 1 0 000 2z"
-                />
-              </svg>
-              Botga o'tish
-            </Button>
-          </a>
+        <div className="text-2xl font-semibold mb-4">
+          Sizda obuna aniqlanmadi.
         </div>
+        <div className="text-base text-muted-foreground mb-6">
+          Inshoni o'qish uchun obunangizni yangilang.
+        </div>
+        <a
+          href="https://t.me/parallelmuhit_bot"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button
+            className=" gap-2 bg-blue-500 hover:bg-blue-600 text-white text-xl font-semibold px-8 py-3 rounded-xl shadow-md transition-colors cursor-pointer"
+            style={{ minWidth: 220 }}
+          >
+            Botga o'tish
+            <SquareArrowOutUpRight className="h-5 w-5" />
+          </Button>
+        </a>
       </div>
     );
   }
 
   if (!selectedPost) {
     // If viewing the welcome page, always show loading spinner until loaded (never show login)
-    if (slug === "pm") {
+    if (slug === "haqida") {
       return (
         <div className="flex flex-col items-center justify-center h-64 space-y-4">
           <div className="w-12 h-12 border-4 border-t-indigo-500 border-indigo-200 rounded-full animate-spin"></div>
@@ -187,13 +156,6 @@ const PostDetail: React.FC = () => {
     if (!isAuthenticated) {
       return (
         <div className="post-login-container ">
-          <h2 className={`text-xl font-bold mb-2 flex items-center`}>
-            <Shield className={`h-5 w-5 mr-2`} />
-            Authentication Required
-          </h2>
-          <p className={`${textClass} mb-4`}>
-            Please log in with Telegram to read our blog posts.
-          </p>
           <Login returnUrl={`/${slug}`} />
         </div>
       );
@@ -211,17 +173,6 @@ const PostDetail: React.FC = () => {
   if (!selectedPost.isPublic && !isAuthenticated) {
     return (
       <div className="post-login-container">
-        <div
-          className={`p-6 bg-gradient-to-br ${gradientStartClass} ${gradientEndClass} border ${borderColorClass} rounded-xl mb-6`}
-        >
-          <h2 className={`text-xl font-bold mb-2 flex items-center`}>
-            <Shield className={`h-5 w-5 mr-2`} />
-            Authentication Required
-          </h2>
-          <p className={`${textClass} mb-4`}>
-            Please log in with Telegram to read our blog posts.
-          </p>
-        </div>
         <Login returnUrl={`/${slug}`} />
       </div>
     );
@@ -281,9 +232,17 @@ const PostDetail: React.FC = () => {
   };
 
   return (
-    <article className={`flex flex-col ${state === "collapsed" ? "items-center" : ""} md:mr-3 transition-all duration-300 ease-in-out`}>
+    <article
+      className={`flex flex-col ${
+        state === "collapsed" ? "items-center" : ""
+      } md:mr-3 transition-all duration-300 ease-in-out`}
+    >
       {/* Large Title - centered with no left margin */}
-      <h1 className={`text-4xl font-bold mb-10 mt-6 transition-all duration-300 ease-in-out max-w-110 `}>{selectedPost.title}</h1>
+      <h1
+        className={`text-4xl font-bold mb-10 mt-6 transition-all duration-300 ease-in-out max-w-[30ch]`}
+      >
+        {selectedPost.title}
+      </h1>
 
       <div
         className={`prose ${proseClass} max-w-none transition-all duration-300 ease-in-out

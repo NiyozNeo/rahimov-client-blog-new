@@ -319,5 +319,8 @@ p {
 .post-login-container {
   border-radius: 1rem;
   padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 

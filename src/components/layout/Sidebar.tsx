@@ -36,14 +36,14 @@ export function AppSidebar() {
     if (blogSlug) {
       navigate(`/${blogSlug}`);
     } else {
-      navigate("/1");
+      navigate("/haqida");
     }
   };
 
   // Handle logout
   const handleLogout = () => {
     logout();
-    navigate("/post/1");
+    navigate("/haqida");
   };
 
   return (
@@ -90,7 +90,7 @@ export function AppSidebar() {
                         `}
                       >
                         <div className="text-sm font-medium flex">
-                          <span className="mr-2">{index + 1}.</span>
+                          <span className="mr-2">{index === 0 ? 1 : filteredBlogs.length - index + 1}.</span>
                           {blog.title}
                         </div>
                       </a>
