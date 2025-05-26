@@ -20,7 +20,7 @@ const api = axios.create({
 
 // Add request interceptor to include auth token in headers if available
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("auth_token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -201,7 +201,13 @@ export const BlogApi = {
     id: string,    blogData: { title?: string; content?: any; slug?: string }
   ) => {
     try {
-      const response = await api.put(`/blog/${id}`, blogData);
+      const response = await api.put(`/blog/${id}`, blogData, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          token: localStorage.getItem("auth_token") || "",
+        },
+      });
       return response.data;
     } catch (error) {
       console.error(`Error updating blog ${id}:`, error);
@@ -211,7 +217,13 @@ export const BlogApi = {
 
   deleteBlog: async (id: string) => {
     try {
-      const response = await api.delete(`/blog/${id}`);
+      const response = await api.delete(`/blog/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          token: localStorage.getItem("auth_token") || "",
+        },  
+      });
       return response.data;
     } catch (error) {
       console.error(`Error deleting blog ${id}:`, error);
