@@ -234,7 +234,7 @@ const PostDetail: React.FC = () => {
   return (
     <article
       className={`flex flex-col ${
-        state === "collapsed" ? "items-center" : ""
+        state === "collapsed" ? "items-center" : "ml-8"
       } md:mr-3 transition-all duration-300 ease-in-out`}
     >
       {/* Large Title - centered with no left margin */}
