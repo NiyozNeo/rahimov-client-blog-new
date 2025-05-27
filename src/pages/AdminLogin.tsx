@@ -9,8 +9,6 @@ const AdminLogin: React.FC = () => {
 
   // Handle successful Telegram authentication
   const handleTelegramAuth = async (telegramUser: any) => {
-    console.log('Admin Login - Telegram User:', telegramUser);
-    
     try {
       // The backend will automatically check if this user is an admin
       // and include that information in the response

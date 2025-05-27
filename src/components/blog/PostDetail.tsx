@@ -36,6 +36,7 @@ const PostDetail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const { state } = useSidebar();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const loadPost = async () => {
@@ -64,7 +65,6 @@ const PostDetail: React.FC = () => {
     };
     loadPost();
   }, [slug, isAuthenticated, hasChannelAccess, selectPostBySlug, selectedPost]);
-console.log(state);
 
   // Check if dark mode is active
   const isDark =
@@ -237,7 +237,7 @@ console.log(state);
     <article
       className={`flex flex-col ${
         state === "collapsed" ? "items-center" : ""
-      } md:mr-3 transition-all duration-300 ease-in-out ${ useIsMobile() ? "items-center" : "ml-8"}`}
+      } md:mr-3 transition-all duration-300 ease-in-out ${isMobile ? "items-center" : "ml-8"}`}
     >
       {/* Large Title - centered with no left margin */}
       <h1

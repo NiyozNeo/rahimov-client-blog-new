@@ -20,8 +20,6 @@ const Login: React.FC<LoginProps> = ({ returnUrl }) => {
 
   // Handle successful Telegram authentication
   const handleTelegramAuth = async (telegramUser: any) => {
-    console.log("Telegram User:", telegramUser);
-
     try {
       const success = await loginWithTelegram(telegramUser);
 

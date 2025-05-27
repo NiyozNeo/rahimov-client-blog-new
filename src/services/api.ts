@@ -72,9 +72,6 @@ export const AuthApi = {
           token: localStorage.getItem("auth_token") || "",
         },
       });
-      console.log("Channel access response:", response.data);
-      
-
       if (response.data && typeof response.data.hasAccess === 'boolean') {
         return response.data.hasAccess;
       } else {

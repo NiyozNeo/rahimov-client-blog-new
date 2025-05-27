@@ -102,8 +102,6 @@ export const BlogProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     if (storedUser && storedToken) {
       const parsedUser = JSON.parse(storedUser);
-      console.log("Parsed user:", parsedUser);
-      
       setUser(parsedUser);
       setIsAdmin(parsedUser.isAdmin);
       setIsAuthenticated(true);
@@ -115,15 +113,12 @@ export const BlogProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Load all blogs
   useEffect(() => {
-    console.log("Fetching blogs after authentication and channel access check");
     void fetchBlogs();
   }, [isAuthenticated, hasChannelAccess]);
 
   const fetchBlogs = async () => {
     try {
       const fetchedBlogs = await BlogApi.getAllBlogs();
-      console.log("Fetched blogs:", fetchedBlogs);
-      
       // Add the default public post to the beginning of the blogs array
       const allBlogs = [{
         ...defaultPublicPost,
@@ -165,8 +160,6 @@ export const BlogProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const loginWithTelegram = async (authData: any): Promise<boolean> => {
     try {
-      console.log("Login data:", authData);
-
       const response = await api.post("/login/telegram", authData, {
         headers: {
           "Content-Type": "application/json",
