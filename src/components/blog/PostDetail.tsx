@@ -6,6 +6,7 @@ import Login from "../../pages/Login";
 import { Edit, Trash2, Shield, SquareArrowOutUpRight } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 import { useSidebar } from "../ui/sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PostParams {
   slug: string;
@@ -235,8 +236,8 @@ console.log(state);
   return (
     <article
       className={`flex flex-col ${
-        state === "collapsed" ? "items-center" : "ml-8"
-      } md:mr-3 transition-all duration-300 ease-in-out`}
+        state === "collapsed" ? "items-center" : ""
+      } md:mr-3 transition-all duration-300 ease-in-out ${ useIsMobile() ? "items-center" : "ml-8"}`}
     >
       {/* Large Title - centered with no left margin */}
       <h1

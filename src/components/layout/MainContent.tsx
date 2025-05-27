@@ -1,11 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
 const MainContent: React.FC = () => {
-  const { state, isMobile } = useSidebar();
-
   return (
     <main className="bg-muted/30 text-foreground overflow-y-auto min-h-screen">
       <div
